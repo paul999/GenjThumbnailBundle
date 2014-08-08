@@ -1,8 +1,8 @@
-
+{
     "name":        "genj/thumbnail-bundle",
     "type":        "symfony-bundle",
-    "description": "Symfony Thumbnail bundle",
-    "keywords":    ["genj", "thumbnail", "symfony", "bundle"],
+    "description": "using Liip/ImagineBundle to generated SEO-friendly thumbnail-names",
+    "keywords":    ["genj", "thumbnail", "symfony2", "bundle"],
     "homepage":    "http://github.com/Genj/ThumbnailBundle",
     "license":     "MIT",
 
