@@ -1,0 +1,2 @@
+genj_thumbnail_bundle:
+    resource: "@GenjThumbnailBundle/Resources/config/routing.yml"

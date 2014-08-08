@@ -1,0 +1,14 @@
+genj_thumbnail:
+    pattern: /thumbnails/{bundleName}/{entityName}/{attribute}/{filter}/{idShard}/{slug}-{id}.{_format}
+    host: 'static.{domain}'
+    defaults:
+        _controller: liip_imagine.controller:filterActionForObject
+        domain: '%domain%'
+        attribute: 'fileUpload'
+        _locale: en
+    requirements:
+        _format: jpg|jpeg|gif|png
+        slug: "[a-zA-Z0-9\-\/]+"
+        domain: "[a-zA-Z0-9\.\-\/]+"
+        idShard: "[\w/]+"
+        id: "^\d+$"
