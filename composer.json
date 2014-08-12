@@ -3,7 +3,7 @@
     "type":        "symfony-bundle",
     "description": "using Liip/ImagineBundle to generated SEO-friendly thumbnail-names",
     "keywords":    ["genj", "thumbnail", "symfony2", "bundle"],
-    "homepage":    "http://github.com/Genj/ThumbnailBundle",
+    "homepage":    "http://github.com/genj/GenjThumbnailBundle",
     "license":     "MIT",
 
     "authors": [
