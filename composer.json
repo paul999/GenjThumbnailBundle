@@ -1,7 +1,7 @@
 {
     "name":        "genj/thumbnail-bundle",
     "type":        "symfony-bundle",
-    "description": "using Liip/ImagineBundle to generated SEO-friendly thumbnail-names",
+    "description": "Uses Liip/ImagineBundle and generates SEO-friendly thumbnail-names",
     "keywords":    ["genj", "thumbnail", "symfony2", "bundle"],
     "homepage":    "http://github.com/genj/GenjThumbnailBundle",
     "license":     "MIT",
@@ -24,8 +24,12 @@
     "require": {
         "symfony/symfony": "2.5.*",
         "sensio/framework-extra-bundle": "~3.0",
-        "vich/uploader-bundle": "~0",
+        "vich/uploader-bundle": "0.9.0",
         "liip/imagine-bundle": "dev-master"
+    },
+
+    "config": {
+        "preferred-install": "dist"
     },
 
     "minimum-stability": "dev",
