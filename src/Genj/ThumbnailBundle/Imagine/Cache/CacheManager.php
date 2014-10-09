@@ -43,8 +43,8 @@ class CacheManager extends BaseCacheManager
         $parameters['entityName'] = $this->getEntityNameForObject($object);
         $parameters['_format']    = $this->getFormat($filter);
 
-        if ($urlForFrontend) {
-            $urlGenerator = $this->container->get('genj_url_generator.routing.frontend.generator.url_generator');
+        if ($urlForFrontend && $this->container->has('genj_frontend_url.routing.frontend.generator.url_generator')) {
+            $urlGenerator = $this->container->get('genj_frontend_url.routing.frontend.generator.url_generator');
             $url          = $urlGenerator->generateFrontendUrl('genj_thumbnail', $parameters, $preview);
         } else {
             $url = $this->router->generate('genj_thumbnail', $parameters, true);

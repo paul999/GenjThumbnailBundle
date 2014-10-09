@@ -20,8 +20,7 @@ Features:
 
 ### Optional
 
-* GenjUrlGeneratorBundle - http://svn.genj.nl/svn/intern/bundles/GenjUrlGeneratorBundle/trunk/
-
+* GenjFrontendUrlBundle - https://github.com/genj/GenjFrontendUrlBundle
 
 
 # Installation
