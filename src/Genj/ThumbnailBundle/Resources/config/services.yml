@@ -15,3 +15,12 @@ services:
             - @liip_imagine.cache.manager
         tags:
             - { name: twig.extension }
+
+    genj_thumbnail.listener.thumbnail_cleaner:
+        class: Genj\ThumbnailBundle\EventListener\ThumbnailCleaner
+        arguments:
+            - @vich_uploader.annotation_driver
+            - @liip_imagine.filter.configuration
+            - @liip_imagine.cache.manager
+        tags:
+            - { name: doctrine.event_subscriber }
