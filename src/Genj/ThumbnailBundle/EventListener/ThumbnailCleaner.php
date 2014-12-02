@@ -4,18 +4,46 @@ namespace Genj\ThumbnailBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Vich\UploaderBundle\Driver\AnnotationDriver;
+use Liip\ImagineBundle\Imagine\Filter\FilterConfiguration;
+use Genj\ThumbnailBundle\Imagine\Cache\CacheManager;
 
+/**
+ * Class ThumbnailCleaner
+ *
+ * @package Genj\ThumbnailBundle\EventListener
+ */
 class ThumbnailCleaner implements EventSubscriber {
+    /**
+     * @var AnnotationDriver
+     */
+    protected $annotationDriver;
 
-    protected $annotationDriver, $filterConfig, $cacheManager;
+    /**
+     * @var FilterConfiguration
+     */
+    protected $filterConfig;
 
-    public function __construct($annotationDriver, $filterConfig, $cacheManager)
+    /**
+     * @var CacheManager
+     */
+    protected $cacheManager;
+
+    /**
+     * @param AnnotationDriver    $annotationDriver
+     * @param FilterConfiguration $filterConfig
+     * @param CacheManager        $cacheManager
+     */
+    public function __construct(AnnotationDriver $annotationDriver, FilterConfiguration $filterConfig, CacheManager $cacheManager)
     {
         $this->annotationDriver = $annotationDriver;
         $this->filterConfig     = $filterConfig;
         $this->cacheManager     = $cacheManager;
     }
 
+    /**
+     * @return array
+     */
     public function getSubscribedEvents()
     {
         return array(
@@ -24,6 +52,9 @@ class ThumbnailCleaner implements EventSubscriber {
         );
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postUpdate(LifecycleEventArgs $args)
     {
         $em     = $args->getEntityManager();
@@ -42,6 +73,9 @@ class ThumbnailCleaner implements EventSubscriber {
         }
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postDelete(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
@@ -57,7 +91,8 @@ class ThumbnailCleaner implements EventSubscriber {
     /**
      * Delete all cached thumbnails when an entity gets updated
      *
-     * @param \stdClass $object
+     * @param \stdClass $entity
+     * @param string    $uploadableField
      *
      * @todo Would be even better if this only happens for the uploadableField which was updated
      */
@@ -66,17 +101,19 @@ class ThumbnailCleaner implements EventSubscriber {
         $filters = array_keys($this->filterConfig->all());
 
         foreach ($filters as $filter) {
-            $thumbnailUrl = $this->cacheManager->getBrowserPathForObject(
-                $entity,
-                $uploadableField->getPropertyName(),
-                $filter,
-                true
-            );
+            if ($filter !== 'cache') {
+                $thumbnailUrl = $this->cacheManager->getBrowserPathForObject(
+                    $entity,
+                    $uploadableField->getPropertyName(),
+                    $filter,
+                    true
+                );
 
-            $thumbnailPath = parse_url($thumbnailUrl, PHP_URL_PATH);
-            $thumbnailPath = preg_replace('/^(\/dev\.php)/', '', $thumbnailPath, 1);
+                $thumbnailPath = parse_url($thumbnailUrl, PHP_URL_PATH);
+                $thumbnailPath = preg_replace('/^(\/dev\.php)/', '', $thumbnailPath, 1);
 
-            $this->cacheManager->remove($thumbnailPath, $filter);
+                $this->cacheManager->remove($thumbnailPath, $filter);
+            }
         }
     }
 }
