@@ -55,8 +55,9 @@ class ImagineController extends BaseImagineController
         }
 
         try {
-            // Retrieve the corresponding Entity Manager
-            $entityRepository = $this->container->get('doctrine')->getRepository($bundleName .':'. $entityName);
+            // Retrieve the corresponding Entity Manager and Repository
+            $entityManager    = $this->container->get('doctrine')->getManagerForClass($bundleName .':'. $entityName);
+            $entityRepository = $entityManager->getRepository($bundleName .':'. $entityName);
             $entity           = $entityRepository->findOneById($id);
 
             // Retrieve the file path using the vich uploader
