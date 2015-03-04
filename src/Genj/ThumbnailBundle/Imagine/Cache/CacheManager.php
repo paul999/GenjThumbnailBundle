@@ -43,6 +43,15 @@ class CacheManager extends BaseCacheManager
         $parameters['entityName'] = $this->getEntityNameForObject($object);
         $parameters['_format']    = $this->getFormat($filter);
 
+        // If we are on upload. or static. subdomain, generate the url with that subdomain
+        $host      = $this->container->get('request')->getHost();
+        $parts     = explode('.', $host);
+        $subdomain = $parts[0];
+
+        if ($subdomain === 'upload' || $subdomain === 'static') {
+            $parameters['subdomain'] = $subdomain;
+        }
+
         if ($urlForFrontend && $this->container->has('genj_frontend_url.routing.frontend.generator.url_generator')) {
             $urlGenerator = $this->container->get('genj_frontend_url.routing.frontend.generator.url_generator');
             $url          = $urlGenerator->generateFrontendUrl('genj_thumbnail', $parameters, $preview);
