@@ -61,42 +61,52 @@ Features:
     liip_imagine:   
         driver: imagick
         filter_sets:
-            tiny:
-                quality: 100
+
+            # used in admin and in listings
+            teaser:
+                quality: 90
                 filters:
-                    relative_resize: { widen: 100 }
-                    format: ['png']
-                    
-            big:
-                quality: 100
-                filters:
-                    relative_resize: { widen: 350 }
+                    upscale: { min: [320, 320] }
+                    thumbnail: { size: [320, 320] }
                     format: ['jpg']
 
-            original:
-                quality: 80
+            # main image - not over full size
+            detail:
+                quality: 90
                 filters:
-                    format: ['gif']
+                    relative_resize: { widen: 1000 }
+                    format: ['jpg']
+
+            # full size
+            big:
+                quality: 90
+                filters:
+                    relative_resize: { widen: 1600 }
+                    format: ['jpg']
+
 ```
 
 
 * Add in routing_hh.yml AND routing_admin.yml:
 
-
+```
     genj_thumbnail:
         pattern: /thumbnails/{bundleName}/{entityName}/{attribute}/{filter}/{idShard}/{slug}-{id}.{_format}
-        host: 'static.{domain}'
+        host: '{subdomain}.{domain}'
         defaults:
             _controller: liip_imagine.controller:filterActionForObject
+            subdomain: 'static'
             domain: '%domain%'
             attribute: 'fileUpload'
-            _locale: en
         requirements:
             _format: jpg|jpeg|gif|png
-            slug: "[a-zA-Z0-9\-\/]+"
-            domain: "[a-zA-Z0-9\.\-\/]+"
-            idShard: "[\w/]+"
-            id: "^\d+$"
+            slug: '[a-zA-Z0-9\-\/]+'
+            subdomain: 'static|upload'
+            domain: '[a-zA-Z0-9\.\-\/]+'
+            idShard: '[\w/]+'
+            id: '^\d+$'
+```
+
 
 OR if you don't feel the need to adjust the original routing:
 
@@ -106,7 +116,7 @@ OR if you don't feel the need to adjust the original routing:
 # Usage
 
 
-    <img src="{{ genj_thumbnail(object, 'fileUpload', 'tiny'}) }}">
+    <img src="{{ genj_thumbnail(object, 'fileUpload', 'teaser'}) }}">
 
 
 # Notes
