@@ -64,7 +64,11 @@ class ThumbnailCleaner implements EventSubscriber {
         $entityChangeSet = $uow->getEntityChangeSet($entity);
 
         $entityClass      = new \ReflectionClass($entity);
-        $uploadableFields = $this->annotationDriver->loadMetadataForClass($entityClass)->fields;
+        $metaData = $this->annotationDriver->loadMetadataForClass($entityClass);
+        if (!is_object($metaData) || property_exists($metaData, 'fields')) {
+            return;
+        }
+        $uploadableFields = $metaData->fields;
 
         foreach ($uploadableFields as $uploadableField) {
             if (isset($entityChangeSet[$uploadableField['fileNameProperty']])) {
