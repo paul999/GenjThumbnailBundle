@@ -19,7 +19,7 @@ services:
     genj_thumbnail.listener.thumbnail_cleaner:
         class: Genj\ThumbnailBundle\EventListener\ThumbnailCleaner
         arguments:
-            - @vich_uploader.annotation_driver
+            - @vich_uploader.metadata_driver.annotation
             - @liip_imagine.filter.configuration
             - @liip_imagine.cache.manager
         tags:

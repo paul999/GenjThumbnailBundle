@@ -4,7 +4,7 @@ namespace Genj\ThumbnailBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Vich\UploaderBundle\Driver\AnnotationDriver;
+use Vich\UploaderBundle\Metadata\Driver\AnnotationDriver;
 use Liip\ImagineBundle\Imagine\Filter\FilterConfiguration;
 use Genj\ThumbnailBundle\Imagine\Cache\CacheManager;
 
@@ -64,10 +64,10 @@ class ThumbnailCleaner implements EventSubscriber {
         $entityChangeSet = $uow->getEntityChangeSet($entity);
 
         $entityClass      = new \ReflectionClass($entity);
-        $uploadableFields = $this->annotationDriver->readUploadableFields($entityClass);
+        $uploadableFields = $this->annotationDriver->loadMetadataForClass($entityClass)->fields;
 
         foreach ($uploadableFields as $uploadableField) {
-            if (isset($entityChangeSet[$uploadableField->getFileNameProperty()])) {
+            if (isset($entityChangeSet[$uploadableField['fileNameProperty']])) {
                 $this->deleteCachedThumbnails($entity, $uploadableField);
             }
         }
@@ -81,7 +81,7 @@ class ThumbnailCleaner implements EventSubscriber {
         $entity = $args->getEntity();
 
         $entityClass      = new \ReflectionClass($entity);
-        $uploadableFields = $this->annotationDriver->readUploadableFields($entityClass);
+        $uploadableFields = $this->annotationDriver->loadMetadataForClass($entityClass)->fields;
 
         foreach ($uploadableFields as $uploadableField) {
             $this->deleteCachedThumbnails($entity, $uploadableField);
@@ -104,7 +104,7 @@ class ThumbnailCleaner implements EventSubscriber {
             if ($filter !== 'cache') {
                 $thumbnailUrl = $this->cacheManager->getBrowserPathForObject(
                     $entity,
-                    $uploadableField->getPropertyName(),
+                    $uploadableField['propertyName'],
                     $filter,
                     true
                 );
