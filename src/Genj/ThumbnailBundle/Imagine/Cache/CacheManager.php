@@ -2,6 +2,7 @@
 
 namespace Genj\ThumbnailBundle\Imagine\Cache;
 
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Symfony\Component\DependencyInjection\Container;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager as BaseCacheManager;
 
@@ -69,9 +70,10 @@ class CacheManager extends BaseCacheManager
      */
     protected function getBundleNameForObject($object)
     {
-        $reflectionClass = new \ReflectionClass(get_class($object));
+        /** @var ClassMetadata $metaData */
+        $metaData = $this->container->get('doctrine')->getManager()->getMetadataFactory()->getMetadataFor(get_class($object));
 
-        $namespace  = $reflectionClass->getNamespaceName();
+        $namespace  = $metaData->getReflectionClass()->getNamespaceName();
         $bundleName = str_replace('\\Entity', '', $namespace);
         $bundleName = str_replace('\\', '', $bundleName);
 
