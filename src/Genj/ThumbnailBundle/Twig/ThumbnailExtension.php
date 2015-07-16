@@ -33,6 +33,16 @@ class ThumbnailExtension extends \Twig_Extension
     }
 
     /**
+     * @return array
+     */
+    public function getFilters()
+    {
+        return array(
+            new \Twig_SimpleFilter('genj_thumbnail_info', array($this, 'getThumbnailInfo'))
+        );
+    }
+
+    /**
      * @param \stdClass $object
      * @param string    $property
      * @param string    $filter
@@ -47,6 +57,26 @@ class ThumbnailExtension extends \Twig_Extension
             $this->cacheManager->getBrowserPathForObject($object, $property, $filter, $urlForFrontend, $preview),
             'utf8'
         );
+    }
+
+    /**
+     * @param string $src
+     *
+     * @return array
+     */
+    public function getThumbnailInfo($src)
+    {
+        $imageData = getimagesize($src);
+        $info      = array('width' => 0, 'height' => 0);
+
+        if ($imageData) {
+            $info = array(
+                'width'  => $imageData[0],
+                'height' => $imageData[1]
+            );
+        }
+
+        return $info;
     }
 
     /**

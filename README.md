@@ -113,12 +113,27 @@ OR if you don't feel the need to adjust the original routing:
     genj_thumbnail_bundle:
         resource: "@GenjThumbnailBundle/Resources/config/routing.yml"
 
+
+
 # Usage
 
+To generate an URL to a thumbnail:
 
-    <img src="{{ genj_thumbnail(object, 'fileUpload', 'teaser'}) }}">
+```
+<img src="{{ genj_thumbnail(object, 'fileUpload', 'teaser'}) }}">
+```
+
+To grab image info (width and height):
+
+```
+{% set image_src  = genj_thumbnail(object, 'fileUpload', 'teaser'}) %}
+{% set image_info = image_src|genj_thumbnail_info %}
+
+<img src="{{ genj_thumbnail(object, 'fileUpload', 'teaser'}) }}" width="{{ image_info.width }}" height="{{ image_info.height }}">
+```
+
 
 
 # Notes
 
-Make sure you limit your slug field, because browser url may be limited.
+Make sure you limit the length of your slug field, because browser url may be limited.
