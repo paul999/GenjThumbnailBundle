@@ -13,6 +13,7 @@ services:
         class: Genj\ThumbnailBundle\Twig\ThumbnailExtension
         arguments:
             - @liip_imagine.cache.manager
+            - @logger
         tags:
             - { name: twig.extension }
 

@@ -3,6 +3,7 @@
 namespace Genj\ThumbnailBundle\Twig;
 
 use Genj\ThumbnailBundle\Imagine\Cache\CacheManager;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ThumbnailExtension
@@ -14,12 +15,17 @@ class ThumbnailExtension extends \Twig_Extension
     /** @var CacheManager */
     protected $cacheManager;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     /**
-     * @param CacheManager $cacheManager
+     * @param CacheManager    $cacheManager
+     * @param LoggerInterface $logger
      */
-    public function __construct(CacheManager $cacheManager)
+    public function __construct(CacheManager $cacheManager, LoggerInterface $logger)
     {
         $this->cacheManager = $cacheManager;
+        $this->logger       = $logger;
     }
 
     /**
@@ -66,15 +72,19 @@ class ThumbnailExtension extends \Twig_Extension
      */
     public function getThumbnailInfo($src)
     {
-        $imageData = getimagesize($src);
         $info      = array('width' => 0, 'height' => 0);
+        $imageData = @getimagesize($src);
 
-        if ($imageData) {
-            $info = array(
-                'width'  => $imageData[0],
-                'height' => $imageData[1]
-            );
+        if ($imageData === false) {
+            $this->logger->warning('GenjThumbnailBundle: getimagesize() on ' . $src . ' failed.');
+
+            return $info;
         }
+
+        $info = array(
+            'width'  => $imageData[0],
+            'height' => $imageData[1]
+        );
 
         return $info;
     }
