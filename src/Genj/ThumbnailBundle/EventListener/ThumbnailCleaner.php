@@ -48,7 +48,7 @@ class ThumbnailCleaner implements EventSubscriber {
     {
         return array(
             'postUpdate',
-            'postDelete',
+            'preRemove',
         );
     }
 
@@ -57,6 +57,8 @@ class ThumbnailCleaner implements EventSubscriber {
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
+
+
         $em     = $args->getEntityManager();
         $uow    = $em->getUnitOfWork();
         $entity = $args->getEntity();
@@ -65,9 +67,10 @@ class ThumbnailCleaner implements EventSubscriber {
 
         $entityClass      = new \ReflectionClass($entity);
         $metaData = $this->annotationDriver->loadMetadataForClass($entityClass);
-        if (!is_object($metaData) || property_exists($metaData, 'fields')) {
+        if (!is_object($metaData) || !property_exists($metaData, 'fields')) {
             return;
         }
+
         $uploadableFields = $metaData->fields;
 
         foreach ($uploadableFields as $uploadableField) {
@@ -80,7 +83,7 @@ class ThumbnailCleaner implements EventSubscriber {
     /**
      * @param LifecycleEventArgs $args
      */
-    public function postDelete(LifecycleEventArgs $args)
+    public function preRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
 
