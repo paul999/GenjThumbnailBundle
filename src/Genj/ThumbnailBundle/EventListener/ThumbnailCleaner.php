@@ -57,15 +57,13 @@ class ThumbnailCleaner implements EventSubscriber {
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
-
-
         $em     = $args->getEntityManager();
         $uow    = $em->getUnitOfWork();
         $entity = $args->getEntity();
 
         $entityChangeSet = $uow->getEntityChangeSet($entity);
 
-        $entityClass      = new \ReflectionClass($entity);
+        $entityClass = new \ReflectionClass($entity);
         $metaData = $this->annotationDriver->loadMetadataForClass($entityClass);
         if (!is_object($metaData) || !property_exists($metaData, 'fields')) {
             return;
