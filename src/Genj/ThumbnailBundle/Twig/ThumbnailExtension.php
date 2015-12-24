@@ -73,6 +73,15 @@ class ThumbnailExtension extends \Twig_Extension
     public function getThumbnailInfo($src)
     {
         $info      = array('width' => 0, 'height' => 0);
+        
+        // quick hack to load image info from local harddisk instead of http
+        $src = str_replace('http://static.vogue.nl/', '', $src);
+        $src = str_replace('http://upload.vogue.nl/', '', $src);
+        $src = str_replace('dev.php/', '', $src);
+        $src = str_replace('preview.php/', '', $src);
+        $src = '/home/genj/htdocs/vogue.nl/current/web/' . $src;
+        $this->logger->info('GenjThumbnailBundle: running getimagesize() on ' . $src);
+
         $imageData = @getimagesize($src);
 
         if ($imageData === false) {
