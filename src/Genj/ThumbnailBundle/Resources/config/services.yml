@@ -1,27 +1,27 @@
 parameters:
-    liip_imagine.controller.class: Genj\ThumbnailBundle\Controller\ImagineController
-    liip_imagine.cache.manager.class: Genj\ThumbnailBundle\Imagine\Cache\CacheManager
-    liip_imagine.cache.resolver.web_path.class: Genj\ThumbnailBundle\Imagine\Cache\Resolver\WebPathResolver
+    liip_imagine.controller.class: 'Genj\ThumbnailBundle\Controller\ImagineController'
+    liip_imagine.cache.manager.class: 'Genj\ThumbnailBundle\Imagine\Cache\CacheManager'
+    liip_imagine.cache.resolver.web_path.class: 'Genj\ThumbnailBundle\Imagine\Cache\Resolver\WebPathResolver'
 
 services:
     liip_imagine.filter.loader.format:
-        class: Genj\ThumbnailBundle\Imagine\Filter\Loader\FormatFilterLoader
+        class: 'Genj\ThumbnailBundle\Imagine\Filter\Loader\FormatFilterLoader'
         tags:
-            - { name: liip_imagine.filter.loader, loader: format }
+            - { name: 'liip_imagine.filter.loader', loader: 'format' }
 
     genj_thumbnail.twig.thumbnail_extension:
-        class: Genj\ThumbnailBundle\Twig\ThumbnailExtension
+        class: 'Genj\ThumbnailBundle\Twig\ThumbnailExtension'
         arguments:
-            - @liip_imagine.cache.manager
-            - @logger
+            - '@liip_imagine.cache.manager'
+            - '@logger'
         tags:
-            - { name: twig.extension }
+            - { name: 'twig.extension' }
 
     genj_thumbnail.listener.thumbnail_cleaner:
-        class: Genj\ThumbnailBundle\EventListener\ThumbnailCleaner
+        class: 'Genj\ThumbnailBundle\EventListener\ThumbnailCleaner'
         arguments:
-            - @vich_uploader.metadata_driver.annotation
-            - @liip_imagine.filter.configuration
-            - @liip_imagine.cache.manager
+            - '@vich_uploader.metadata_driver.annotation'
+            - '@liip_imagine.filter.configuration'
+            - '@liip_imagine.cache.manager'
         tags:
-            - { name: doctrine.event_subscriber }
+            - { name: 'doctrine.event_subscriber' }
