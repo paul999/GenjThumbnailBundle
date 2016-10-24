@@ -46,7 +46,7 @@ class CacheManager extends BaseCacheManager
         $parameters['_format']    = $this->getFormat($filter);
 
         // If we are on upload. or static. subdomain, generate the url with that subdomain
-        $host      = $this->container->get('request')->getHost();
+        $host      = $this->container->get('request_stack')->getCurrentRequest()->getHost();
         $parts     = explode('.', $host);
         $subdomain = $parts[0];
 
