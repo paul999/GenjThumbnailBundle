@@ -123,6 +123,8 @@ class ThumbnailCleaner implements EventSubscriber {
                 $thumbnailPath = parse_url($thumbnailUrl, PHP_URL_PATH);
                 $thumbnailPath = preg_replace('/^(\/dev\.php)/', '', $thumbnailPath, 1);
 
+                $thumbnailPath = ltrim($thumbnailPath, '/');
+
                 $this->cacheManager->remove($thumbnailPath, $filter);
             }
         }
