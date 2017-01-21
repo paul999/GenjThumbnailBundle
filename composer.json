@@ -27,6 +27,10 @@
         "vich/uploader-bundle": "~0|~1",
         "liip/imagine-bundle": "dev-master"
     },
+    
+    "suggest": {
+        "oneup/flysystem-bundle": "^1.7"
+    },
 
     "config": {
         "preferred-install": "dist"
