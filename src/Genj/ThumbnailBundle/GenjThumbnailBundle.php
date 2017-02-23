@@ -5,6 +5,7 @@ namespace Genj\ThumbnailBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Genj\ThumbnailBundle\DependencyInjection\Compiler\CompilerPass;
+use Genj\ThumbnailBundle\DependencyInjection\LocalAndCdnResolverFactory;
 
 /**
  * Class GenjThumbnailBundle
@@ -21,6 +22,9 @@ class GenjThumbnailBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new CompilerPass());
+
+        $extension = $container->getExtension('liip_imagine');
+        $extension->addResolverFactory(new LocalAndCdnResolverFactory());
     }
 
     /**

@@ -25,3 +25,14 @@ services:
             - '@liip_imagine.cache.manager'
         tags:
             - { name: 'doctrine.event_subscriber' }
+
+    genj_thumbnail.cache.resolver.prototype.localAndCdnResolver:
+        class: 'Genj\ThumbnailBundle\Imagine\Cache\Resolver\LocalAndCdnResolver'
+        arguments:
+            - '@filesystem'
+            - '@router.request_context'
+            - ~ # webRootDir, injected
+            - ~ # cachePrefix, injected
+            - ~ # useCdn, injected
+            - ~ # cdn, injected
+        tags: ~ # injected
