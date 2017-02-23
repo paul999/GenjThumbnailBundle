@@ -4,13 +4,12 @@ namespace Genj\ThumbnailBundle\Imagine\Cache\Resolver;
 
 use Liip\ImagineBundle\Imagine\Cache\Resolver\WebPathResolver as BaseResolver;
 use Liip\ImagineBundle\Binary\BinaryInterface;
-use Liip\ImagineBundle\Imagine\Cache\Resolver\WebPathResolver;
 use Symfony\Component\Filesystem\Filesystem as SfFilesystem;
 use League\Flysystem\Filesystem as FlyFilesystem;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * Class WebPathResolver
+ * Class LocalAndCdnResolver
  *
  * @package Genj\ThumbnailBundle\Imagine\Cache\Resolver
  */
