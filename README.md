@@ -21,8 +21,8 @@ Features:
 
 * VichUploaderBundle - https://packagist.org/packages/vich/uploader-bundle
 * LiipImagineBundle - https://packagist.org/packages/liip/imagine-bundle
-* LeagueFlysystem-aws-s3-v3 - https://packagist.org/packages/league/flysystem-aws-s3-v3
-* OneUpFlysystem - https://packagist.org/packages/oneup/flysystem-bundle
+* LeagueFlysystem-aws-s3-v3 - https://packagist.org/packages/league/flysystem-aws-s3-v3 (for AWS-S3 only)
+* OneUpFlysystem - https://packagist.org/packages/oneup/flysystem-bundle (for AWS-S3 only)
 
 
 ### Optional
@@ -32,16 +32,26 @@ Features:
 
 # Installation
 
-* Add to composer.json (dev-master is neccesary here, unfortunately): "liip/imagine-bundle": "dev-master" and run ```composer update```
+* Add the bundle to your project composer.json 
+
+    ```
+    "require": {
+    [..]
+        "genj/thumbnail-bundle": "dev-master",
+    [..]
+    }
+    ```
+
+    and run ```composer update```
 
 * Register VichUploaderBundle, LiipImagineBundle, FlySystemBundle and GenjThumbnailBundle in AppKernel.php:
 
-
+    ```
     new Vich\UploaderBundle\VichUploaderBundle(),
     new Liip\ImagineBundle\LiipImagineBundle(),
     new Genj\ThumbnailBundle\GenjThumbnailBundle(),
     new Oneup\FlysystemBundle\OneupFlysystemBundle(),
-
+    ```
 
 * Create a `domain` parameter in app/config/parameters.yml and fill it with the domain of the website without subdomain.
 
@@ -97,9 +107,9 @@ Features:
     For more examples of what can be configured here, see the READ.ME of the liib imagine bundle at https://github.com/liip/LiipImagineBundle/blob/1.0/README.md 
 
 
-* Configure cdn settings.
+* Add configuration
 
-    Add the folowing to your config.yml
+    /app/config/config.yml
     ```
     liip_imagine:
         resolvers:
@@ -120,7 +130,7 @@ Features:
     If you wish to use a CDN then complete this section and follow the instructions in the **setup AWS-S3** section below.
     
     
-* Add in routing_<PROJECT>.yml:
+* enable route in routing.yml:
 
     ```
     genj_thumbnail:
@@ -146,7 +156,9 @@ Features:
     
     Note: if you want to use the CDN, the routing is different, see the **setup AWS-S3** section below.
 
+
 # Usage
+
 To generate an URL to a thumbnail:
 
 ```
@@ -174,9 +186,20 @@ Make sure you limit the length of your slug field, because browser url may be li
 
 * If no bucket is available yet, create and configure one. See the section **Create and configure a bucket on AWS-S3** below.
 
-* Configure the thumnbail bundle to use a CDN. 
+* add additional external vendors in your composer.json
+    ```
+    "require": {
+    [..]
+        "genj/thumbnail-bundle": "dev-master",
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "oneup/flysystem-bundle": "^1.7",
+    [..]
+    }
+    ```
 
-    Add the following to your app config:
+    and run ```composer update```
+
+* update your app/config/config.yml for the CDN usage
     
     ```
     liip_imagine:
@@ -293,8 +316,6 @@ Make sure you limit the length of your slug field, because browser url may be li
         ]
     }
     ```
-    
-
 
 * Enable website hosting (static hosting)
     
@@ -328,9 +349,7 @@ Make sure you limit the length of your slug field, because browser url may be li
     </RoutingRules>
     ```
 
-
-
-# Testing the AWS-S3 CDN
+## Testing the AWS-S3 CDN
 
 To test if the setup is working, you should do the following with an image that is accessed by the website using the twig thumbnail filter.
 
