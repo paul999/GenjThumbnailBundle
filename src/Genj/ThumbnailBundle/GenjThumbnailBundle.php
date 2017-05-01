@@ -21,8 +21,6 @@ class GenjThumbnailBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new CompilerPass());
-
         $extension = $container->getExtension('liip_imagine');
         $extension->addResolverFactory(new LocalAndCdnResolverFactory());
     }
