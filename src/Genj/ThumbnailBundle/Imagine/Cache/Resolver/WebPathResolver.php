@@ -3,7 +3,6 @@
 namespace Genj\ThumbnailBundle\Imagine\Cache\Resolver;
 
 use Liip\ImagineBundle\Imagine\Cache\Resolver\WebPathResolver as BaseResolver;
-use Liip\ImagineBundle\Binary\BinaryInterface;
 
 /**
  * Class WebPathResolver
