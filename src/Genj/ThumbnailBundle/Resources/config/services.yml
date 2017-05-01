@@ -4,6 +4,38 @@ parameters:
     liip_imagine.cache.resolver.web_path.class: 'Genj\ThumbnailBundle\Imagine\Cache\Resolver\WebPathResolver'
 
 services:
+
+    # this service is an override of the definition in the LiipImagineBundle
+    liip_imagine.cache.manager:
+        class: '%liip_imagine.cache.manager.class%'
+        arguments:
+            - '@liip_imagine.filter.configuration'
+            - '@router'
+            - '@liip_imagine.cache.signer'
+            - '@event_dispatcher'
+            - '%liip_imagine.cache.resolver.default%'
+        calls:
+            - ['setContainer', ['@service_container']]
+    # this service is an override of the definition in the LiipImagineBundle
+    liip_imagine.controller:
+        class: '%liip_imagine.controller.class%'
+        arguments:
+            - '@liip_imagine.data.manager'
+            - '@liip_imagine.filter.manager'
+            - '@liip_imagine.cache.manager'
+            - '@liip_imagine.cache.signer'
+            - '@logger'
+        calls:
+            - ['setContainer', ['@service_container']]
+    # this service is an override of the definition in the LiipImagineBundle
+    liip_imagine.cache.resolver.prototype.web_path:
+        class: '%liip_imagine.cache.resolver.web_path.class%'
+        arguments:
+            - '@filesystem'
+            - '@router.request_context'
+            - ~ # will be injected by WebPathResolverFactory
+            - ~ # will be injected by WebPathResolverFactory
+
     liip_imagine.filter.loader.format:
         class: 'Genj\ThumbnailBundle\Imagine\Filter\Loader\FormatFilterLoader'
         tags:
