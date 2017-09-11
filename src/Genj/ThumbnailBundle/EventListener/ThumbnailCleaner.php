@@ -116,7 +116,8 @@ class ThumbnailCleaner implements EventSubscriber {
      */
     public function deleteCachedThumbnails($entity, $uploadableField)
     {
-        $filters = array_keys($this->filterConfig->all());
+        $filters       = array_keys($this->filterConfig->all());
+        $thumbnailUrls = array();
 
         foreach ($filters as $filter) {
             if ($filter !== 'cache') {
@@ -127,13 +128,17 @@ class ThumbnailCleaner implements EventSubscriber {
                     true
                 );
 
+                // Remember this URL for the call to CloudflareManager
+                $thumbnailUrls[] = $thumbnailUrl;
+
                 $thumbnailPath = parse_url($thumbnailUrl, PHP_URL_PATH);
                 $thumbnailPath = preg_replace('/^(\/dev\.php)/', '', $thumbnailPath, 1);
                 $thumbnailPath = ltrim($thumbnailPath, '/');
 
                 $this->cacheManager->remove($thumbnailPath, $filter);
-                $this->cloudflareManager->remove($thumbnailUrl);
             }
         }
+
+        $this->cloudflareManager->remove($thumbnailUrls);
     }
 }

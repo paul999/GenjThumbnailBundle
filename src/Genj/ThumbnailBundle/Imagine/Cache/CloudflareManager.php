@@ -32,14 +32,19 @@ class CloudflareManager
     }
 
     /**
-     * @param string $thumbnailUrl
+     * @param array $thumbnailUrls
      *
      * @return void
      */
-    public function remove($thumbnailUrl)
+    public function remove($thumbnailUrls)
     {
         // Only continue if user has enabled Cloudflare
         if ($this->config['enable'] === false) {
+            return;
+        }
+
+        // Only continue if there are URLs to purge
+        if (count($thumbnailUrls) < 1) {
             return;
         }
 
@@ -54,7 +59,7 @@ class CloudflareManager
 
         // Cloudflare is enabled and we have all configuration settings, so proceed with purge
         try {
-            $this->purge($thumbnailUrl);
+            $this->purge($thumbnailUrls);
         } catch (\Exception $ex) {
             $this->logger->error($ex->getMessage());
             throw $ex;
@@ -64,15 +69,15 @@ class CloudflareManager
     /**
      * Prepares and sends the DELETE request to purge a file from Cloudflare cache.
      *
-     * @param string $thumbnailUrl
+     * @param array $thumbnailUrls
      *
      * @return void
      */
-    protected function purge($thumbnailUrl)
+    protected function purge($thumbnailUrls)
     {
         // Set variables for purge request
         $url     = sprintf('https://api.cloudflare.com/client/v4/zones/%s/purge_cache', $this->config['zone_id']);
-        $payload = array('files' => array($thumbnailUrl));
+        $payload = array('files' => $thumbnailUrls);
         $headers = array(
             'Content-Type: application/json',
             'X-Auth-Email: ' . $this->config['auth_email'],
