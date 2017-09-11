@@ -369,7 +369,7 @@ To test if the setup is working, you should do the following with an image that 
 The bundle supports the purging of thumbnails from Cloudflare CDN. This is handled by the `CloudflareManager` and is
 disabled by default. To enable it, do the following.
 
-* Add to your `config.yml`:
+* Add to your `cdn.yml`:
 
     ```
     genj_thumbnail:
