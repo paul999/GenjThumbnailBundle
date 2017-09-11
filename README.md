@@ -410,7 +410,7 @@ disabled by default. To enable it, do the following.
             domain: ".*"
     ```
 
-* With the corresponding `cdn_domain` in your parameters.yml:
+* And add the corresponding `cdn_domain` in your parameters.yml:
 
     ```
     cdn_domain: static.example.com
