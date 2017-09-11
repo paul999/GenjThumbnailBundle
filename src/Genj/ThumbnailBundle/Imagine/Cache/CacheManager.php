@@ -36,14 +36,16 @@ class CacheManager extends BaseCacheManager
      */
     public function getBrowserPathForObject($object, $property, $filter, $urlForFrontend = false, $preview = false)
     {
-        $parameters['attribute']  = $property;
-        $parameters['filter']     = $filter;
-        $parameters['id']         = $object->getId();
-        $parameters['slug']       = $object->getSlug();
-        $parameters['idShard']    = implode('/', str_split(str_pad($object->getId(), 6, '0', STR_PAD_LEFT), 2));
-        $parameters['bundleName'] = $this->getBundleNameForObject($object);
-        $parameters['entityName'] = $this->getEntityNameForObject($object);
-        $parameters['_format']    = $this->getFormat($filter);
+        $parameters = array(
+            'attribute'  => $property,
+            'filter'     => $filter,
+            'id'         => $object->getId(),
+            'slug'       => $object->getSlug(),
+            'idShard'    => implode('/', str_split(str_pad($object->getId(), 6, '0', STR_PAD_LEFT), 2)),
+            'bundleName' => $this->getBundleNameForObject($object),
+            'entityName' => $this->getEntityNameForObject($object),
+            '_format'    => $this->getFormat($filter)
+        );
 
         // If we are on upload. or static. subdomain, generate the url with that subdomain
         $currentRequest = $this->container->get('request_stack')->getCurrentRequest();
