@@ -85,7 +85,7 @@ class ThumbnailCleaner implements EventSubscriber {
     {
         $entity = $args->getEntity();
 
-        $entityClass      = new \ReflectionClass($entity);
+        $entityClass = new \ReflectionClass($entity);
         $metaData = $this->annotationDriver->loadMetadataForClass($entityClass);
 
         if (!is_object($metaData) || !property_exists($metaData, 'fields')) {
