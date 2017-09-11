@@ -65,7 +65,7 @@ class CacheManager extends BaseCacheManager
             $urlGenerator = $this->container->get('genj_frontend_url.routing.frontend.generator.url_generator');
             $url          = $urlGenerator->generateFrontendUrl('genj_thumbnail', $parameters, $preview);
         } else {
-            $url = $this->router->generate('genj_thumbnail', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+            $url = $this->router->generate('genj_thumbnail', $parameters, UrlGeneratorInterface::NETWORK_PATH);
         }
 
         return $url;
