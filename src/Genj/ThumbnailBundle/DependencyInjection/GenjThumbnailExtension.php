@@ -20,6 +20,10 @@ class GenjThumbnailExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration          = new Configuration();
+        $processedConfiguration = $this->processConfiguration($configuration, $configs);
+        $container->setParameter('genj_thumbnail.cloudflare', $processedConfiguration['cloudflare']);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
