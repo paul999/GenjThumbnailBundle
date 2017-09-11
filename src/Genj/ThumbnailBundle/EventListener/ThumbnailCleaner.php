@@ -134,6 +134,7 @@ class ThumbnailCleaner implements EventSubscriber {
                 $thumbnailPath = ltrim($thumbnailPath, '/');
 
                 $this->cacheManager->remove($thumbnailPath, $filter);
+                $this->cloudflareManager->remove($thumbnailUrl);
             }
         }
     }
