@@ -61,6 +61,7 @@ services:
             - '@vich_uploader.metadata_driver.annotation'
             - '@liip_imagine.filter.configuration'
             - '@liip_imagine.cache.manager'
+            - '@genj_thumbnail.cache.cloudflare_manager'
         tags:
             - { name: 'doctrine.event_subscriber' }
 

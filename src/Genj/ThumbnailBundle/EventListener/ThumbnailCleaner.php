@@ -7,6 +7,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Vich\UploaderBundle\Metadata\Driver\AnnotationDriver;
 use Liip\ImagineBundle\Imagine\Filter\FilterConfiguration;
 use Genj\ThumbnailBundle\Imagine\Cache\CacheManager;
+use Genj\ThumbnailBundle\Imagine\Cache\CloudflareManager;
 
 /**
  * Class ThumbnailCleaner
@@ -30,15 +31,22 @@ class ThumbnailCleaner implements EventSubscriber {
     protected $cacheManager;
 
     /**
+     * @var CloudflareManager
+     */
+    protected $cloudflareManager;
+
+    /**
      * @param AnnotationDriver    $annotationDriver
      * @param FilterConfiguration $filterConfig
      * @param CacheManager        $cacheManager
+     * @param CloudflareManager   $cloudflareManager
      */
-    public function __construct(AnnotationDriver $annotationDriver, FilterConfiguration $filterConfig, CacheManager $cacheManager)
+    public function __construct(AnnotationDriver $annotationDriver, FilterConfiguration $filterConfig, CacheManager $cacheManager, CloudflareManager $cloudflareManager)
     {
-        $this->annotationDriver = $annotationDriver;
-        $this->filterConfig     = $filterConfig;
-        $this->cacheManager     = $cacheManager;
+        $this->annotationDriver  = $annotationDriver;
+        $this->filterConfig      = $filterConfig;
+        $this->cacheManager      = $cacheManager;
+        $this->cloudflareManager = $cloudflareManager;
     }
 
     /**
