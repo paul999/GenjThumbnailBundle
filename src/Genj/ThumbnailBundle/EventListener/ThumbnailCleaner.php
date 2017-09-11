@@ -72,7 +72,7 @@ class ThumbnailCleaner implements EventSubscriber {
         $entityChangeSet = $uow->getEntityChangeSet($entity);
 
         $entityClass = new \ReflectionClass($entity);
-        $metaData = $this->annotationDriver->loadMetadataForClass($entityClass);
+        $metaData    = $this->annotationDriver->loadMetadataForClass($entityClass);
         if (!is_object($metaData) || !property_exists($metaData, 'fields')) {
             return;
         }
@@ -91,10 +91,9 @@ class ThumbnailCleaner implements EventSubscriber {
      */
     public function preRemove(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
-
+        $entity      = $args->getEntity();
         $entityClass = new \ReflectionClass($entity);
-        $metaData = $this->annotationDriver->loadMetadataForClass($entityClass);
+        $metaData    = $this->annotationDriver->loadMetadataForClass($entityClass);
 
         if (!is_object($metaData) || !property_exists($metaData, 'fields')) {
             return;
@@ -130,7 +129,6 @@ class ThumbnailCleaner implements EventSubscriber {
 
                 $thumbnailPath = parse_url($thumbnailUrl, PHP_URL_PATH);
                 $thumbnailPath = preg_replace('/^(\/dev\.php)/', '', $thumbnailPath, 1);
-
                 $thumbnailPath = ltrim($thumbnailPath, '/');
 
                 $this->cacheManager->remove($thumbnailPath, $filter);
