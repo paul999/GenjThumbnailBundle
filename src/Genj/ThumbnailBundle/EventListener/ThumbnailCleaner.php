@@ -7,6 +7,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Vich\UploaderBundle\Metadata\Driver\AnnotationDriver;
 use Liip\ImagineBundle\Imagine\Filter\FilterConfiguration;
 use Genj\ThumbnailBundle\Imagine\Cache\CacheManager;
+use Genj\ThumbnailBundle\Imagine\Cache\CloudflareManager;
 
 /**
  * Class ThumbnailCleaner
@@ -30,15 +31,22 @@ class ThumbnailCleaner implements EventSubscriber {
     protected $cacheManager;
 
     /**
+     * @var CloudflareManager
+     */
+    protected $cloudflareManager;
+
+    /**
      * @param AnnotationDriver    $annotationDriver
      * @param FilterConfiguration $filterConfig
      * @param CacheManager        $cacheManager
+     * @param CloudflareManager   $cloudflareManager
      */
-    public function __construct(AnnotationDriver $annotationDriver, FilterConfiguration $filterConfig, CacheManager $cacheManager)
+    public function __construct(AnnotationDriver $annotationDriver, FilterConfiguration $filterConfig, CacheManager $cacheManager, CloudflareManager $cloudflareManager)
     {
-        $this->annotationDriver = $annotationDriver;
-        $this->filterConfig     = $filterConfig;
-        $this->cacheManager     = $cacheManager;
+        $this->annotationDriver  = $annotationDriver;
+        $this->filterConfig      = $filterConfig;
+        $this->cacheManager      = $cacheManager;
+        $this->cloudflareManager = $cloudflareManager;
     }
 
     /**
@@ -64,7 +72,7 @@ class ThumbnailCleaner implements EventSubscriber {
         $entityChangeSet = $uow->getEntityChangeSet($entity);
 
         $entityClass = new \ReflectionClass($entity);
-        $metaData = $this->annotationDriver->loadMetadataForClass($entityClass);
+        $metaData    = $this->annotationDriver->loadMetadataForClass($entityClass);
         if (!is_object($metaData) || !property_exists($metaData, 'fields')) {
             return;
         }
@@ -83,10 +91,9 @@ class ThumbnailCleaner implements EventSubscriber {
      */
     public function preRemove(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
-
-        $entityClass      = new \ReflectionClass($entity);
-        $metaData = $this->annotationDriver->loadMetadataForClass($entityClass);
+        $entity      = $args->getEntity();
+        $entityClass = new \ReflectionClass($entity);
+        $metaData    = $this->annotationDriver->loadMetadataForClass($entityClass);
 
         if (!is_object($metaData) || !property_exists($metaData, 'fields')) {
             return;
@@ -109,7 +116,8 @@ class ThumbnailCleaner implements EventSubscriber {
      */
     public function deleteCachedThumbnails($entity, $uploadableField)
     {
-        $filters = array_keys($this->filterConfig->all());
+        $filters       = array_keys($this->filterConfig->all());
+        $thumbnailUrls = array();
 
         foreach ($filters as $filter) {
             if ($filter !== 'cache') {
@@ -120,13 +128,17 @@ class ThumbnailCleaner implements EventSubscriber {
                     true
                 );
 
+                // Remember this URL for the call to CloudflareManager
+                $thumbnailUrls[] = $thumbnailUrl;
+
                 $thumbnailPath = parse_url($thumbnailUrl, PHP_URL_PATH);
                 $thumbnailPath = preg_replace('/^(\/dev\.php)/', '', $thumbnailPath, 1);
-
                 $thumbnailPath = ltrim($thumbnailPath, '/');
 
                 $this->cacheManager->remove($thumbnailPath, $filter);
             }
         }
+
+        $this->cloudflareManager->remove($thumbnailUrls);
     }
 }

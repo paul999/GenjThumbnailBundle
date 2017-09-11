@@ -127,9 +127,9 @@ Features:
 
     The `data_root` parameters should point to your document root.
 
-    If you wish to use a CDN then complete this section and follow the instructions in the **setup AWS-S3** section below.
-    
-    
+    If you wish to use a CDN then complete this section and follow the instructions in the **setup AWS-S3** or **setup Cloudflare** section below.
+
+
 * enable route in routing.yml:
 
     ```
@@ -153,8 +153,8 @@ Features:
     genj_thumbnail_bundle:
         resource: "@GenjThumbnailBundle/Resources/config/routing.yml"
     ```
-    
-    Note: if you want to use the CDN, the routing is different, see the **setup AWS-S3** section below.
+
+    Note: if you want to use the CDN, the routing is different, see the **setup AWS-S3** or the **setup Cloudflare** section below.
 
 
 # Usage
@@ -363,3 +363,56 @@ To test if the setup is working, you should do the following with an image that 
 4. Images uploaded to the S3 bucket should be publicly available because of the defined policy.
 
 5. Accessing an image on S3 that does not exist should cause S3 to redirect back to the website.
+
+# Setup Cloudflare (optional)
+
+The bundle supports the purging of thumbnails from Cloudflare CDN. This is handled by the `CloudflareManager` and is
+disabled by default. To enable it, do the following.
+
+* Add to your `cdn.yml`:
+
+    ```
+    genj_thumbnail:
+        cloudflare:
+            enable:     true
+            zone_id:    '%genj_thumbnail.cloudflare.zone_id%'
+            auth_email: '%genj_thumbnail.cloudflare.auth_email%'
+            auth_key:   '%genj_thumbnail.cloudflare.auth_key%'
+    ```
+
+* `zone_id` can be found on your domain overview page: https://www.cloudflare.com/a/overview/<your_domain>
+
+* `auth_email` and `auth_key` (called `Global API Key` on the website) can be found on your Profile page: https://www.cloudflare.com/a/profile
+
+* Add the secrets to your `parameters.yml`:
+
+    ```
+    genj_thumbnail.cloudflare.zone_id:
+    genj_thumbnail.cloudflare.auth_email:
+    genj_thumbnail.cloudflare.auth_key:
+    ```
+
+* If you host the thumbnails on a separate domain, configure the routing as such:
+
+    ```
+    genj_thumbnail:
+        path:  /thumbnails/{bundleName}/{entityName}/{attribute}/{filter}/{idShard}/{slug}-{id}.{_format}
+        host: '{domain}'
+        defaults:
+            _controller: liip_imagine.controller:filterActionForObject
+            domain: '%cdn_domain%'
+            attribute: 'fileUpload'
+        requirements:
+            _format: jpg|jpeg|gif|png
+            slug: "[a-zA-Z0-9\\-\\/]+"
+            idShard: "[\\w/]+"
+            id: "^\\d+$"
+            domain: ".*"
+    ```
+
+* And add the corresponding `cdn_domain` in your parameters.yml:
+
+    ```
+    cdn_domain: static.example.com
+    ```
+
