@@ -416,3 +416,30 @@ disabled by default. To enable it, do the following.
     cdn_domain: static.example.com
     ```
 
+## Testing Cloudflare CDN
+
+To test if the setup is working, you should do the following with an image that is accessed by the website using the twig thumbnail filter. Note that there can be a few seconds of delay because of the way information is distributed amongst the Cloudflare nodes.
+
+1. After uploading an image in the website and seeing it appear on the site, hitting it with curl should give `CF-Cache-Status: HIT`:
+
+    ```
+    $ curl -I https://example.com/thumbnail.jpg
+
+    HTTP/1.1 200 OK
+    ...
+    CF-Cache-Status: HIT
+    ```
+
+2. Deleting the image should purge the thumbnail from Cloudflare caches. The next hit with curl should give `CF-Cache-Status: MISS`:
+
+    ```
+    $ curl -I https://example.com/thumbnail.jpg
+
+    HTTP/1.1 200 OK
+    ...
+    CF-Cache-Status: MISS
+    ```
+
+3. Uploading a new image over an existing image should purge the thumbnail from Cloudflare caches, so a subsequent curl hit should result in `CF-Cache-Status: MISS`. This will cache the thumbnail, so the curl hit after that should give `CF-Cache-Status: HIT`.
+
+4. Accessing a thumbnail on Cloudflare that does not exist, should show the website's 404 page and *not* cache it. So repeatedly requesting a non-existing should keep giving `CF-Cache-Status: MISS`.
