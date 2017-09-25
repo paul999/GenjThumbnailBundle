@@ -416,6 +416,8 @@ disabled by default. To enable it, do the following.
     cdn_domain: static.example.com
     ```
 
+* If you want to exclude things from the Cloudflare cache (e.g. your `app_dev.php`), you can add those under Page Rules in your Cloudflare control panel. See https://www.cloudflare.com/a/page-rules/<example.com>. The rule should be `Cache Level: Bypass`.
+
 ## Testing Cloudflare CDN
 
 To test if the setup is working, you should do the following with an image that is accessed by the website using the twig thumbnail filter. Note that there can be a few seconds of delay because of the way information is distributed amongst the Cloudflare nodes.
