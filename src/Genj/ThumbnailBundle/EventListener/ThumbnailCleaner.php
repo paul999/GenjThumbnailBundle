@@ -14,7 +14,8 @@ use Genj\ThumbnailBundle\Imagine\Cache\CloudflareManager;
  *
  * @package Genj\ThumbnailBundle\EventListener
  */
-class ThumbnailCleaner implements EventSubscriber {
+class ThumbnailCleaner implements EventSubscriber
+{
     /**
      * @var AnnotationDriver
      */
