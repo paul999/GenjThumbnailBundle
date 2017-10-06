@@ -366,8 +366,9 @@ To test if the setup is working, you should do the following with an image that 
 
 # Setup Cloudflare (optional)
 
-The bundle supports the purging of thumbnails from Cloudflare CDN. This is handled by the `CloudflareManager` and is
-disabled by default. To enable it, do the following.
+The bundle supports the purging of thumbnails from Cloudflare CDN. This is handled by the `CloudflarePurger` and is
+disabled by default. The `CloudflarePurger` also listens for the VichUploaderBundle event `vich_uploader.pre_remove`
+and will purge the original uploaded file too. To enable it, do the following.
 
 * Add to your `cdn.yml`:
 
