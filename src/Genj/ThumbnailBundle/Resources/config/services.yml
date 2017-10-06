@@ -49,12 +49,6 @@ services:
         tags:
             - { name: 'twig.extension' }
 
-    genj_thumbnail.cache.cloudflare_manager:
-        class: 'Genj\ThumbnailBundle\Imagine\Cache\CloudflareManager'
-        arguments:
-            - '%genj_thumbnail.cloudflare%'
-            - '@logger'
-
     genj_thumbnail.listener.thumbnail_cleaner:
         class: 'Genj\ThumbnailBundle\EventSubscriber\ThumbnailCleaner'
         arguments:
