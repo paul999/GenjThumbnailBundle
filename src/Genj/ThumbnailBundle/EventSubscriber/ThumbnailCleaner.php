@@ -1,6 +1,6 @@
 <?php
 
-namespace Genj\ThumbnailBundle\EventListener;
+namespace Genj\ThumbnailBundle\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;

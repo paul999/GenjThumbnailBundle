@@ -56,7 +56,7 @@ services:
             - '@logger'
 
     genj_thumbnail.listener.thumbnail_cleaner:
-        class: 'Genj\ThumbnailBundle\EventListener\ThumbnailCleaner'
+        class: 'Genj\ThumbnailBundle\EventSubscriber\ThumbnailCleaner'
         arguments:
             - '@vich_uploader.metadata_driver.annotation'
             - '@liip_imagine.filter.configuration'
