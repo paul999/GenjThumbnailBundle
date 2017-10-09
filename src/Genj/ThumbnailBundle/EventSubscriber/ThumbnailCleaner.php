@@ -1,20 +1,22 @@
 <?php
 
-namespace Genj\ThumbnailBundle\EventListener;
+namespace Genj\ThumbnailBundle\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Vich\UploaderBundle\Metadata\Driver\AnnotationDriver;
 use Liip\ImagineBundle\Imagine\Filter\FilterConfiguration;
+use Genj\ThumbnailBundle\Event\Event;
 use Genj\ThumbnailBundle\Imagine\Cache\CacheManager;
-use Genj\ThumbnailBundle\Imagine\Cache\CloudflareManager;
 
 /**
  * Class ThumbnailCleaner
  *
  * @package Genj\ThumbnailBundle\EventListener
  */
-class ThumbnailCleaner implements EventSubscriber {
+class ThumbnailCleaner implements EventSubscriber
+{
     /**
      * @var AnnotationDriver
      */
@@ -31,22 +33,22 @@ class ThumbnailCleaner implements EventSubscriber {
     protected $cacheManager;
 
     /**
-     * @var CloudflareManager
+     * @var EventDispatcherInterface
      */
-    protected $cloudflareManager;
+    protected $dispatcher;
 
     /**
-     * @param AnnotationDriver    $annotationDriver
-     * @param FilterConfiguration $filterConfig
-     * @param CacheManager        $cacheManager
-     * @param CloudflareManager   $cloudflareManager
+     * @param AnnotationDriver         $annotationDriver
+     * @param FilterConfiguration      $filterConfig
+     * @param CacheManager             $cacheManager
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(AnnotationDriver $annotationDriver, FilterConfiguration $filterConfig, CacheManager $cacheManager, CloudflareManager $cloudflareManager)
+    public function __construct(AnnotationDriver $annotationDriver, FilterConfiguration $filterConfig, CacheManager $cacheManager, EventDispatcherInterface $dispatcher)
     {
         $this->annotationDriver  = $annotationDriver;
         $this->filterConfig      = $filterConfig;
         $this->cacheManager      = $cacheManager;
-        $this->cloudflareManager = $cloudflareManager;
+        $this->dispatcher        = $dispatcher;
     }
 
     /**
@@ -128,7 +130,7 @@ class ThumbnailCleaner implements EventSubscriber {
                     true
                 );
 
-                // Remember this URL for the call to CloudflareManager
+                // Remember this URL for the event dispatch to CloudflarePurger
                 $thumbnailUrls[] = $thumbnailUrl;
 
                 $thumbnailPath = parse_url($thumbnailUrl, PHP_URL_PATH);
@@ -139,6 +141,6 @@ class ThumbnailCleaner implements EventSubscriber {
             }
         }
 
-        $this->cloudflareManager->remove($thumbnailUrls);
+        $this->dispatcher->dispatch('genj_thumbnail.cloudflare_purge', new Event($thumbnailUrls));
     }
 }

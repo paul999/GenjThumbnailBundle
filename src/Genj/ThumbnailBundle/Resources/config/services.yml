@@ -49,21 +49,25 @@ services:
         tags:
             - { name: 'twig.extension' }
 
-    genj_thumbnail.cache.cloudflare_manager:
-        class: 'Genj\ThumbnailBundle\Imagine\Cache\CloudflareManager'
-        arguments:
-            - '%genj_thumbnail.cloudflare%'
-            - '@logger'
-
     genj_thumbnail.listener.thumbnail_cleaner:
-        class: 'Genj\ThumbnailBundle\EventListener\ThumbnailCleaner'
+        class: 'Genj\ThumbnailBundle\EventSubscriber\ThumbnailCleaner'
         arguments:
             - '@vich_uploader.metadata_driver.annotation'
             - '@liip_imagine.filter.configuration'
             - '@liip_imagine.cache.manager'
-            - '@genj_thumbnail.cache.cloudflare_manager'
+            - '@event_dispatcher'
         tags:
             - { name: 'doctrine.event_subscriber' }
+
+    genj_thumbnail.subscriber.cloudflare_purger:
+        class: 'Genj\ThumbnailBundle\EventSubscriber\CloudflarePurger'
+        arguments:
+            - '%genj_thumbnail.cloudflare%'
+            - '%cdn_domain%'
+            - '@vich_uploader.templating.helper.uploader_helper'
+            - '@logger'
+        tags:
+            - { name: 'kernel.event_subscriber' }
 
     genj_thumbnail.cache.resolver.prototype.localAndCdnResolver:
         class: 'Genj\ThumbnailBundle\Imagine\Cache\Resolver\LocalAndCdnResolver'
