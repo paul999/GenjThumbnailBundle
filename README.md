@@ -59,6 +59,11 @@ Features:
     domain: <SITE_DOMAIN.com>  # (without subdomain, .com is just an example)
     ```
 
+* Create a `cdn_domain` parameter in app/config/parameters.yml and fill it with the domain from which you serve static assets. Can be the same as `domain`.
+
+    ```
+    cdn_domain: static.<SITE_DOMAIN.com>  # (.com is just an example)
+    ```
 
 * Add this to app/config/config.yml:
 
