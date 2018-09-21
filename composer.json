@@ -1,9 +1,9 @@
 {
-    "name":        "genj/thumbnail-bundle",
+    "name":        "paul999/thumbnail-bundle",
     "type":        "symfony-bundle",
     "description": "Uses Liip/ImagineBundle and generates SEO-friendly thumbnail-names",
     "keywords":    ["php", "symfony", "bundle", "symfony-bundle", "genj", "thumbnail"],
-    "homepage":    "http://github.com/genj/GenjThumbnailBundle",
+    "homepage":    "http://github.com/paul999/GenjThumbnailBundle",
     "license":     "MIT",
 
     "authors": [
@@ -22,7 +22,7 @@
     ],
 
     "require": {
-        "symfony/symfony": ">=2.5|~3.0",
+        "symfony/symfony": ">=2.5|~3.0|~4.0",
         "sensio/framework-extra-bundle": "~3.0",
         "vich/uploader-bundle": "~0|~1",
         "liip/imagine-bundle": "~1.7"
